@@ -1,0 +1,49 @@
+providers:
+  - id: https://shriyakupp-iitm-scraper.hf.space/api/
+    label: Local FastAPI
+    responseParser: json.answer
+    config:
+      url: https://shriyakupp-iitm-scraper.hf.space/api/
+      method: POST
+      headers:
+        Content-Type: application/json
+      body: |
+        {
+          "question": "{{prompt}}"
+        }
+
+prompts:
+  - "{{prompt}}"
+
+tests:
+  - name: Model usage confusion
+    vars:
+      prompt: >
+        The question asks to use gpt-3.5-turbo-0125 model but the ai-proxy provided by Anand sir only supports gpt-4o-mini. So should we just use gpt-4o-mini or use the OpenAI API for gpt-3.5 turbo?
+    assert:
+      - type: contains
+        value: gpt-4o-mini
+
+  - name: SRS + Bonus display
+    vars:
+      prompt: >
+        If a student scores 10/10 on GA4 as well as a bonus, how would it appear on the dashboard?
+    assert:
+      - type: contains
+        value: bonus mark
+
+  - name: Docker recommendation
+    vars:
+      prompt: >
+        I know Docker but have not used Podman before. Should I use Docker for this course?
+    assert:
+      - type: contains
+        value: Docker
+  - name: TDS Sep 2025 Exam Date
+    vars:
+      prompt: >
+        When is the TDS Sep 2025 end-term exam?
+    assert:
+      - type: contains
+        value: date
+  
